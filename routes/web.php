@@ -14,9 +14,9 @@ use App\Http\Controllers\DishesController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',  [App\Http\Controllers\OrderController::class,'index'])->name('order.form');
+Route::post('order_submit',  [App\Http\Controllers\OrderController::class,'submit'])->name('order.submit');
+Route::get('/search/', [App\Http\Controllers\OrderController::class,'search'])->name('search');
 
 Auth::routes([
     'register'=>false,
@@ -25,7 +25,10 @@ Auth::routes([
     'confirm'=>false,
 ]);
 
-//Route::get('/home', [App\Http\Controllers\OrderController::class, 'index'])->name('home');
-Route::resource('/dish', App\Http\Controllers\DishesController::class);
-//Route::resource('/order', [App\Http\Controllers\OrderController::class, 'index'])->name('home');
 
+Route::resource('/dish', App\Http\Controllers\DishesController::class);
+Route::get('order',  [App\Http\Controllers\DishesController::class,'order'])->name('kitchen.order');
+Route::get('order/{order}/approve',  [App\Http\Controllers\DishesController::class,'approve'])->name('kitchen.approve');
+Route::get('order/{order}/cancel',  [App\Http\Controllers\OrderController::class,'cancel'])->name('waiter.cancel');
+Route::get('order/{order}/ready',  [App\Http\Controllers\DishesController::class,'ready'])->name('kitchen.ready');
+Route::get('order/{order}/serve',  [App\Http\Controllers\OrderController::class,'serve'])->name('waiter.serve');

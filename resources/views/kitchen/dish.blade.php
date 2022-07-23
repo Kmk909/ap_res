@@ -52,8 +52,8 @@
                           <td>{{$dish->category->created_at}}</td>
                           <td>
                             <div class="form-row">
-                            <a href="/dish/{{$dish->id}}/edit" style="height: 40px;margin-right: 10px;" class="btn btn-warning">Edit</a>
-                            <form action="/dish/{{$dish->id}}" method="POST">
+                            <a href="{{route('dish.edit',$dish->id)}}" style="height: 40px;margin-right: 10px;" class="btn btn-warning">Edit</a>
+                            <form action="{{route('dish.destroy',$dish->id)}}" method="POST">
                             @csrf
                             @method('DELETE')
                            <button type="submit" onclick="return confirm('Are you sure you want to delete this item')" class="btn btn-danger">Delete</button>

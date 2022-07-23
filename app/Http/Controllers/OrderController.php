@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dish;
+use App\Models\Order;
+use App\Models\Table;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -11,6 +14,64 @@ class OrderController extends Controller
     }
     public function index()
     {
-        return view('kitchen.order');
+        $dishes = Dish::orderBy('id','desc')->get();
+        $tables = Table::orderBy('id','desc')->get();
+        $rawstatus=config('res.order_status');
+        $status=array_flip($rawstatus);
+        $orders = Order::where('status',4)->get();
+        
+        return view('order_form',compact('dishes','tables','orders','status'));
     }
+    public function submit(Request $request)
+    {
+        $data =array_filter($request->except('_token','table'));
+        //$request->table=(int)$request->table;
+        $orderID=rand();
+        foreach ($data as $key => $value) {
+            if($value>1){
+                for ($i=0; $i < $value ; $i++) { 
+                    $this->saveOrder($orderID,$key,$request);
+                }
+            }else{
+                $this->saveOrder($orderID,$key,$request);
+            }
+        }
+        return redirect('/')->with('message','Order Submitted.');
+    }
+    public function saveOrder($orderID,$dish_id,$request){
+       
+
+        $order=new Order();
+        
+        $order->order_id=$orderID;
+        $order->dish_id=$dish_id;
+        $order->table_id=$request->table;
+        $order->status=config('res.order_status.new');
+        
+        $order->save();
+
+
+    }
+    public function serve(Order $order){
+        
+        $order->status=config('res.order_status.done');
+        $order->save();
+        return redirect('/')->with('message','Order served');
+    }
+    public function cancel(Order $order){
+        $order->status=config('res.order_status.cancel');
+        $order->save();
+        return redirect('order')->with('message','Order Cancelled');
+    }
+    public function search(Request $request){
+        $search = $request->input('search');
+        
+        $posts = Dish::query()->where('name', 'LIKE', "%{$search}%")->get();
+        
+        //dd($posts);
+        //return view('order_form', compact('posts'));
+        return view('order_form',compact('posts'));
+        
+    }
+    
 }
