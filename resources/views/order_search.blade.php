@@ -83,9 +83,25 @@
             
             <form action="{{route('order.submit')}}" method="post">
                 @csrf
-             <div class="row">
-                     
-                        @foreach($dishes as $dish)
+                <div class="row">
+                    @if($posts->isNotEmpty())
+                       @foreach ($posts as $post)
+                            <div class="col-sm-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img src="{{url('/images/'.$post->image)}}" width=160 height=150 >
+                                        <br>
+                                        <h3>{{$post->name}}</h3>
+                                        
+                                        <label for="">Quantity</label>
+                                        <input type="number"  name="{{$post->id}}">
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else 
+                       @foreach($dishes as $dish)
                     
                                 <div class="col-sm-3">
                                 <div class="card">
@@ -101,8 +117,10 @@
                                 </div>
                                 </div>
                     
-                        @endforeach
-             </div>
+                    @endforeach
+                    @endif
+                
+                    </div>
                     <div class="form-group">
                         <label for="">Table Number</label>
                         <select name="table">

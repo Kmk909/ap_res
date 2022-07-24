@@ -69,8 +69,14 @@ class OrderController extends Controller
         $posts = Dish::query()->where('name', 'LIKE', "%{$search}%")->get();
         
         //dd($posts);
-        //return view('order_form', compact('posts'));
-        return view('order_form',compact('posts'));
+        $dishes = Dish::orderBy('id','desc')->get();
+        $tables = Table::orderBy('id','desc')->get();
+        $rawstatus=config('res.order_status');
+        $status=array_flip($rawstatus);
+        $orders = Order::where('status',4)->get();
+        
+        
+        return view('order_search',compact('posts','dishes','tables','orders','status'));
         
     }
     
