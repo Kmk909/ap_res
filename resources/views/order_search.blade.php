@@ -100,6 +100,25 @@
                                 </div>
                             </div>
                         @endforeach
+                        @foreach($dishes as $dish)
+                                @if($posts[0]->name == $dish->name)
+                                    @continue;
+                                @endif
+                                <div class="col-sm-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img src="{{url('/images/'.$dish->image)}}" width=160 height=150 >
+                                        <br>
+                                        <h3>{{$dish->name}}</h3>
+                                        
+                                        <label for="">Quantity</label>
+                                        <input type="number"  name="{{$dish->id}}">
+                                        <br>
+                                    </div>
+                                </div>
+                                </div>
+                    
+                        @endforeach
                     @else 
                        @foreach($dishes as $dish)
                     

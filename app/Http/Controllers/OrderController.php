@@ -75,7 +75,7 @@ class OrderController extends Controller
         $status=array_flip($rawstatus);
         $orders = Order::where('status',4)->get();
         
-        
+
         return view('order_search',compact('posts','dishes','tables','orders','status'));
         
     }
